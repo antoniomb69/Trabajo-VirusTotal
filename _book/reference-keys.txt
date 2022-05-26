@@ -1,0 +1,10 @@
+json
+covertir-json-a-dataframe
+reglas-de-asociación
+usando-arulesviz
+clusters
+kmeans
+dendograma
+fca
+funciones-para-visualización-de-fcar
+formal-concepts-analysis

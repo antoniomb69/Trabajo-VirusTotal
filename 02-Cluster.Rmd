@@ -1,0 +1,33 @@
+# Clusters
+
+## Kmeans
+Haciendo el nbclust nos sale que el valor óptimo de clúster es 2, sin embargo he optado por hacer 5 clústers ya que cuando hacía la visualización quedan mejor agrupados los valores. El resultado se visualiza mediante un gráfico interactivo donde puedes ver el valor de cada nodo con el antivirus al que corresponde.
+
+```{r echo=TRUE}
+fviz_nbclust(t(json_df_filtrados[,4:45]), kmeans, nstart= 10) 
+test_kmeans <- kmeans(t(json_df_filtrados[,4:45]), centers = 5, nstar=100)
+grafico_kmeans<- fviz_cluster(test_kmeans, data = t(json_df_filtrados[,4:45]) , geom=c("point", "text"))+ geom_point(aes(color=cluster, text = name))
+grafico_kmeans$layers[[4]] <- NULL
+grafico_kmeans$layers[[3]] <- NULL
+grafico_kmeans$layers[[1]] <- NULL
+ggplotly(grafico_kmeans)
+
+```
+
+## Dendograma
+Ahora probamos a realizarle un análisis usando un dendograma y luego lo agruparemos en 5 clústers para comprobar si se corresponden con el resultado de kmeans.
+
+```{r}
+distancias <- dist(t(datos_df_filtrados))
+distancias %>% fviz_dist()
+clusters <- distancias %>% hclust()
+plot(clusters, main="Detectado Antivirus" )
+rect.hclust(clusters, k=5 )
+dendograma <- ggdendrogram(clusters, rotate = FALSE)
+
+```
+
+Y ahora mostramos el dendograma en versión interactiva.
+```{r}
+ggplotly(dendograma)
+```

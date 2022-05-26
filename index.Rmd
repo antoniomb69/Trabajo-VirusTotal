@@ -1,0 +1,101 @@
+--- 
+title: "Libro sobre VirusTotal"
+author: "Antonio Molina Baena y Francisco José García Barbero "
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib, packages.bib]
+# url: your book url like https://bookdown.org/yihui/bookdown
+# cover-image: path to the social sharing image like images/cover.jpg
+description: |
+  This is a minimal example of using the bookdown package to write a book.
+  The HTML output format for this example is bookdown::gitbook,
+  set in the _output.yml file.
+link-citations: yes
+github-repo: rstudio/bookdown-demo
+---
+
+```{r, echo=FALSE}
+knitr::opts_chunk$set(error = TRUE)
+```
+
+# Json
+
+En este apartado veremos la creacion de un dataframe leyendo los json
+
+## Covertir json a dataframe
+
+Cargamos las librerias que vamos a usar durante el proyecto:
+
+library(jsonlite)
+library(curl)
+library(tidyjson)
+library(dplyr)
+library(purrr)
+library(tidyverse)
+library(jsonlite)
+library(rjson)
+library(fcaR)
+library(parallel)
+library(rlist)
+library(kableExtra)
+library(factoextra)
+library(fpc)
+library(hasseDiagram)
+library(plotly)
+library(dash)
+library(dashCoreComponents)
+library(dashHtmlComponents)
+library(ggfortify)
+library(ggdendro)
+library(heatmaply)
+
+```{r include=FALSE}
+library(jsonlite)
+library(curl)
+library(tidyjson)
+library(dplyr)
+library(purrr)
+library(tidyverse)
+library(jsonlite)
+library(rjson)
+library(fcaR)
+library(parallel)
+library(purrr)
+library(rlist)
+library(devtools)
+library(rbenchmark)
+library(microbenchmark)
+library(kableExtra)
+library(factoextra)
+library(magrittr)
+library(arules)
+```
+
+Ruta de trabajo
+
+```{r}
+setwd("~/Laboratorio/Book trabajo vt/Android/Android")
+#path <- "~/Laboratorio/Book trabajo vt/Android/Android"
+path <- "./"
+# Creamos una lista con todos los json que hay en el directorio
+
+files <- list.files()
+
+library(parallel)
+cl <- makeCluster(detectCores() - 1)
+json_list<-parLapply(cl,files,function(x) jsonlite::read_json(path = x, simplifyVector = TRUE))
+stopCluster(cl)
+
+class(json_list)
+
+
+t1 <- json_list %>% gather_object
+t1
+
+json_tabla <- json_list %>%
+  spread_all()
+json_tabla
+
+json_tabla_no_na <- json_tabla %>% select_if(~!all(is.na(.)))
+```
